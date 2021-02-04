@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Network Basic Tools v1.0</title>
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: black;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: darkgrey;
+        }
+
+        .active {
+            background-color: grey;
+        }
+    </style>
+</head>
+
+<body>
+    <h1 align="center" style="color:white;background-color:dimgrey;">Network IT Tools</h1>
+    <h4 align="right"> </h4>
+    <hr style="border: 3px solid grey;" />
+    <ul>
+        <li><a id="onglet1" class="active" onClick="selView(1)">Mac@ Convertor</a></li>
+        <li><a id="onglet2" onClick="selView(2)">DHCP Reservation</a></li>
+        <li><a id="onglet3" onClick="selView(3)">More to come</a></li>
+    </ul>
+    <hr style="border: 3px solid grey;" />
+
+    <!-- Mac@ convertor -->
+    <div id="global_mac_convert_id">
+        <h2>Mac@ Convertor</h2>
+
+        <p>input Mac Address (any format):
+            <input type="text" id="mac_input_id" value="">
+            <span style="color:red; " id="checkMac_id"></span>
+        </p>
+        <button type="button" id="convert_button_id" onclick="convertMAC()">ConvertMac@</button>
+
+        <p>Format Cisco:
+            <input type="text" id="mac_cisco_input_minusc_id" value="">
+            <button type="button" id="mac_cisco_button_minusc_id"
+                onclick="copyclipboard('mac_cisco_input_minusc_id');">[Ctrl]+C</button>
+        </p>
+        <p>Format Cisco:
+            <input type="text" id="mac_cisco_input_majusc_id" value="">
+            <button type="button" id="mac_cisco_button_majusc_id"
+                onclick="copyclipboard('mac_cisco_input_majusc_id');">[Ctrl]+C</button>
+        </p>
+
+        <p>Format DNA:
+            <input type="text" id="mac_dna_input_minusc_id" value="">
+            <button type="button" id="mac_dna_button_minusc_id"
+                onclick="copyclipboard('mac_dna_input_minusc_id');">[Ctrl]+C</button>
+        </p>
+        <p>Format DNA:
+            <input type="text" id="mac_dna_input_majusc_id" value="">
+            <button type="button" id="mac_dna_button_majusc_id"
+                onclick="copyclipboard('mac_dna_input_majusc_id');">[Ctrl]+C</button>
+        </p>
+
+        <p>Format Windows:
+            <input type="text" id="mac_windows_input_minusc_id" value="">
+            <button type="button" id="mac_windows_button_minusc_id"
+                onclick="copyclipboard('mac_windows_input_minusc_id');">[Ctrl]+C</button>
+        </p>
+        <p>Format Windows:
+            <input type="text" id="mac_windows_input_majusc_id" value="">
+            <button type="button" id="mac_windows_button_majusc_id"
+                onclick="copyclipboard('mac_windows_input_majusc_id');">[Ctrl]+C</button>
+        </p>
+
+        <p>Format DOS:
+            <input type="text" id="mac_dos_input_minusc_id" value="">
+            <button type="button" id="mac_dos_button_minusc_id"
+                onclick="copyclipboard('mac_dos_input_minusc_id');">[Ctrl]+C</button>
+        </p>
+        <p>Format DOS:
+            <input type="text" id="mac_dos_input_majusc_id" value="">
+            <button type="button" id="mac_dos_button_majusc_id"
+                onclick="copyclipboard('mac_dos_input_majusc_id');">[Ctrl]+C</button>
+        </p>
+    </div>
+
+
+    <!-- DHCP Reservation -->
+    <div id="global_dhcp_reservation_id" style="display:none">
+        <h2>DHCP Reservation</h2>
+        <p>input Mac Address (any format):<input type="text" id="mac_dhcp_input_id" value="">
+            <span style="color:red;" id="checkMac_dhcp_id"></span>
+        </p>
+        <p>input Adress IP:<input type="text" id="IP_input_id" value="">
+            <span style="color:red;" id="checkIP_dhcp_id"></span>
+        </p>
+        <p>input DNS name:<input type="text" id="DNS_input_id" value=""><input type="checkbox" id="dns_checkbox_id"
+                checked>.local.net</p>
+        <p>input DHCP1 IP:<input type="text" id="DHCP1_input_id" value="10.0.0.2"></p>
+        <p>input DHCP2 IP:<input type="text" id="DHCP2_input_id" value="10.0.0.3"></p>
+        <p>Select Add or Delete :
+            <input type="radio" name="DHCP_Action" id="DHCP_Action_id" value="Add" checked> Add
+            <input type="radio" name="DHCP_Action" id="DHCP_Action_id" value="Del"> Del</p>
+        <button type="button" id="dhcp_button_id" onclick="createDHCP()">Create DOS command</button>
+        <p><textarea style="resize:none;" id="DHCP_DOS_input_id" rows="4" cols="140">Need inputs</textarea>
+            <button type="button" id="dhcp_button_id" onclick="copyclipboard('DHCP_DOS_input_id');">[Ctrl]+C</button>
+        </p>
+    </div>
+
+    <div id="global_moretocome_id" style="display:none">
+        <p>More to come later ...</p>
+    </div>
+
+
+    
+    <!-- Fin HTML -->
+
+    <script>
+	
+		const domain = 'local.net'
+		const adServers = ['10.0.0.2','10.0.0.3']
+        
+		
+        let check_length = 0;
+        //mac convertor:
+        let mac_input = "";
+        let mac_cisco = "abcd.1234.5678";
+        let mac_dna = "ab:cd:12:34:56:78";
+        let mac_windows = "ab-cd-12-34-56-78";
+        let mac_dos = "abcd12345678";
+        //DHCP Reservation:
+        let mac_dhcp_dos = "format dos minuscule";
+        let vlan_subnet_dhcp = "vlan Subnet";
+        let dns_name_dhcp = "name."+domain;
+
+        //init (mac convertor):
+        document.getElementById("mac_input_id").value = mac_input;
+        document.getElementById("mac_cisco_input_minusc_id").value = mac_cisco.toLowerCase();
+        document.getElementById("mac_cisco_input_majusc_id").value = mac_cisco.toUpperCase();
+        document.getElementById("mac_dna_input_minusc_id").value = mac_dna.toLowerCase();
+        document.getElementById("mac_dna_input_majusc_id").value = mac_dna.toUpperCase();
+        document.getElementById("mac_windows_input_minusc_id").value = mac_windows.toLowerCase();
+        document.getElementById("mac_windows_input_majusc_id").value = mac_windows.toUpperCase();
+        document.getElementById("mac_dos_input_minusc_id").value = mac_dos.toLowerCase();
+        document.getElementById("mac_dos_input_majusc_id").value = mac_dos.toUpperCase();
+
+        //function:
+        //=========
+
+        // convertMAC():
+        // type: fonction principale
+        // obj: affiche la mac dans les differents formats
+        function convertMAC() {
+            mac_cisco = "";
+            mac_dna = "";
+            mac_windows = "";
+            mac_dos = "";
+            check_length = checkMac('mac_input_id'); //calcul le nb d'hexadecimal dans la mac
+            if (check_length != 12) { //nb d'hexa pas bon: affiche une erreur
+                document.getElementById("checkMac_id").innerHTML =
+                    " => Number of hexadecimal in mac address = " + check_length;
+            }
+            else { //nb d'hexa ok:
+                document.getElementById("checkMac_id").innerHTML = "";
+            }
+            // mise en page des differents formats:
+            let c = ""; // pour parcourir les char de la mac
+            let mac_position = 0; // pur savoir ou placer les mises en page des mac (ajout des - ou des .)
+            for (let i = 0; i < document.getElementById("mac_input_id").value.length; i++) {
+                //check_length++;
+                c = document.getElementById("mac_input_id").value.toLowerCase().charAt(i);
+                if (((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')) && (mac_position < 12)) {
+                    mac_cisco = mac_cisco + c;
+                    mac_dna = mac_dna + c;
+                    mac_windows = mac_windows + c;
+                    mac_dos = mac_dos + c;
+                    mac_position++;
+                    if (mac_position == 4 || mac_position == 8) { mac_cisco = mac_cisco + '.'; }
+                    if (mac_position == 2 || mac_position == 4 || mac_position == 6 || mac_position == 8 || mac_position == 10) {
+                        mac_dna = mac_dna + ':';
+                        mac_windows = mac_windows + '-';
+                    }
+                } //end if
+            } //end for
+            // affichage du resultat (meme si nb d'hexa pas ok)
+            document.getElementById("mac_cisco_input_minusc_id").value = mac_cisco.toLowerCase();
+            document.getElementById("mac_cisco_input_majusc_id").value = mac_cisco.toUpperCase();
+            document.getElementById("mac_dna_input_minusc_id").value = mac_dna.toLowerCase();
+            document.getElementById("mac_dna_input_majusc_id").value = mac_dna.toUpperCase();
+            document.getElementById("mac_windows_input_minusc_id").value = mac_windows.toLowerCase();
+            document.getElementById("mac_windows_input_majusc_id").value = mac_windows.toUpperCase();
+            document.getElementById("mac_dos_input_minusc_id").value = mac_dos.toLowerCase();
+            document.getElementById("mac_dos_input_majusc_id").value = mac_dos.toUpperCase();
+        } //end convertMAC()
+
+        // checkMac()
+        // type: fonction secondaire
+        // obj: input=endroit ou se trouve la mac address, output=le nb d'hexadecimal dans la mac
+        function checkMac(arg_mac_input_id) {
+            // check if mac_input contient bien 12 hex.
+            let nb_hex = 0;
+            for (let i = 0; i < document.getElementById(arg_mac_input_id).value.length; i++) {
+                let c = document.getElementById(arg_mac_input_id).value.toLowerCase().charAt(i);
+                if ((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')) { nb_hex++; }
+            } // end for
+            return nb_hex;
+        } //end checkMac()
+
+        // copyclipboard()
+        // type: fonction secondaire
+        // obj: input=id de la zone input, output= la value de la zone input est mise dans le presse papier:
+        function copyclipboard(source) {
+            var editor = document.getElementById(source);
+            editor.focus();
+            editor.select();
+            document.execCommand('copy');
+        } // end copyclipboard()
+
+        // createDHCP()
+        // type: fonction principale
+        // obj: creer les 2 lignes de commandes pour Add ou Del des reservations DHCP
+        // input= ip, mac, dns name, IP des dhcp server 1&2, checkbox domain, radio "Add or Del".
+        // Ameliorations:
+        // - verifier les ip des DHCP server
+        // - verifier le nom dns (non vide, sans espace, ...)
+        // - calcul de format de la mac dans un appel d'une fonction
+        function createDHCP() {
+            let mac_ok = false; // verification de la mac
+            let ip_dhcp_ok = false; // verification de l'IP
+            // verifier la mac:
+            check_length = checkMac('mac_dhcp_input_id');
+            if (check_length != 12) {
+                document.getElementById("checkMac_dhcp_id").innerHTML =
+                    " => Number of hexadecimal in mac address = " + check_length; //affichage du message d'erreur
+                mac_ok = false;
+            }
+            else {
+                document.getElementById("checkMac_dhcp_id").innerHTML = ""; // pas d'affichage d'erreurs
+                mac_ok = true;
+            }
+            // format mac: (prendre le format DOS minuscule)
+            let c = ""; //parcours les char de la mac
+            let mac_position = 0; //parcours de la mac
+            mac_dhcp_dos = "";
+            for (let i = 0; i < document.getElementById("mac_dhcp_input_id").value.length; i++) {
+                c = document.getElementById("mac_dhcp_input_id").value.toLowerCase().charAt(i);
+                if (((c >= '0' && c <= '9') || (c >= 'a' && c <= 'f')) && (mac_position < 12)) {
+                    mac_dhcp_dos = mac_dhcp_dos + c;
+                    mac_position++;
+                } //end if
+            } //end for
+            // verifier l'IP; trouver le subnet dhcp;
+            ip_dhcp_ok = checkIP(); //le vlan est dans vlan_subnet_dhcp
+
+            //Add or Del:
+            let radio_value = ""; //quel est la valeur du radio checked
+            if (document.getElementsByName('DHCP_Action')[0].checked == true) { radio_value = "Add"; }
+            else if (document.getElementsByName('DHCP_Action')[1].checked == true) { radio_value = "Del"; }
+            else { radio_value = "Radio_issue"; }// cas non possible
+            //          document.getElementById("test2_id").value=radio_value;//OK
+
+            // dns name:
+            dns_name_dhcp = document.getElementById("DNS_input_id").value.trim();
+            if (document.getElementById("dns_checkbox_id").checked) { dns_name_dhcp = dns_name_dhcp + domain; }
+            //          document.getElementById("test2_id").value=dns_name_dhcp;//ok
+
+            // creer la ligne de cmd:
+            //          document.getElementById("test1_id").value = "mac/ip=" + mac_ok + "/" + ip_dhcp_ok;//ok
+            if (mac_ok == true && ip_dhcp_ok == true && radio_value == "Add") { //creer les 2 lignes Add
+                //          document.getElementById("DHCP_DOS_input_id").value="create Add 1"+"\n"+"create Add 2"+"\n";//ok
+                document.getElementById("DHCP_DOS_input_id").value =
+                    "netsh Dhcp Server " + document.getElementById('DHCP1_input_id').value + " scope " + vlan_subnet_dhcp
+                    + " add reservedip " + document.getElementById("IP_input_id").value + " " + mac_dhcp_dos + " " + dns_name_dhcp
+                    + ' "" DHCP ' + "\n"
+                    + "netsh Dhcp Server " + document.getElementById('DHCP2_input_id').value + " scope " + vlan_subnet_dhcp
+                    + " add reservedip " + document.getElementById("IP_input_id").value + " " + mac_dhcp_dos + " " + dns_name_dhcp
+                    + ' "" DHCP ' + "\n";
+            }
+            else if (mac_ok == true && ip_dhcp_ok == true && radio_value == "Del") { // creer les 2 lignes Del
+                //          document.getElementById("DHCP_DOS_input_id").value="create Del 1"+"\n"+"create Del 2"+"\n";//OK
+                document.getElementById("DHCP_DOS_input_id").value =
+                    "netsh Dhcp Server " + document.getElementById('DHCP1_input_id').value + " scope " + vlan_subnet_dhcp
+                    + " del reservedip " + document.getElementById("IP_input_id").value + " " + mac_dhcp_dos + " " + "\n"
+                    + "netsh Dhcp Server " + document.getElementById('DHCP2_input_id').value + " scope " + vlan_subnet_dhcp
+                    + " del reservedip " + document.getElementById("IP_input_id").value + " " + mac_dhcp_dos + " " + "\n";
+            }
+            else { // no go
+                document.getElementById("DHCP_DOS_input_id").value = "need correct input";
+            }
+
+
+            //document.getElementById("DHCP_DOS_input_id").value="ligne1:"+mac_dhcp_dos+"\n"+"ligne2"+"\n"; //ok
+        } // end createDHCP()
+
+        // checkIP()
+        // type: fonction secondaire
+        // obj: output=boolean true si format ip correct, false sinon
+        // obj2: si format IP ok, creation du subnet vlan
+        // ameliorations:
+        // - passer les id en parametres
+        // - creer une nouvelle function pour le subnet vlan
+        // - verifier que les valeurs des ip sont entre 0 et 255
+        function checkIP() {
+            let ip_ok = true; //test intermediaire
+            let nb_digit = 0; //calcul intermediaire du nb de digit (1,2 ou 3 sont ok)
+            let nb_point = 0; //calcul du nb de points dans d'ip (3=ok)
+            let c = ""; //parcourir l'IP
+            document.getElementById("IP_input_id").value = document.getElementById("IP_input_id").value.trim();
+            for (let i = 0; i < document.getElementById("IP_input_id").value.length; i++) {
+                c = document.getElementById("IP_input_id").value.trim().charAt(i);
+                if (c >= '0' && c <= '9' && nb_digit <= 2) { nb_digit++; }
+                else if (c == '.' && nb_digit >= 1 && nb_digit <= 3) { nb_point++; nb_digit = 0; }
+                else { ip_ok = false; }
+            } // end for
+            if (ip_ok == true && nb_point == 3 && nb_digit >= 1 && nb_digit <= 3) {
+                //      document.getElementById("checkIP_dhcp_id").innerHTML = "=> ok" + " nb digit=" + nb_digit;
+                document.getElementById("checkIP_dhcp_id").innerHTML = "";
+                //creer le vlan: vlan_subnet_dhcp=IP_input avec des 0 pour les derniers digit
+                vlan_subnet_dhcp = "";
+                for (let i = 0; i < (document.getElementById("IP_input_id").value.length - nb_digit); i++) {
+                    vlan_subnet_dhcp = vlan_subnet_dhcp + document.getElementById("IP_input_id").value.charAt(i);
+                }
+                vlan_subnet_dhcp = vlan_subnet_dhcp + "0";
+                //document.getElementById("test1_id").value=vlan_subnet_dhcp;//ok
+                return true;
+            }
+            else {
+                document.getElementById("checkIP_dhcp_id").innerHTML =
+                    "=> wrong" + " nb digit=" + nb_digit + " nb point=" + nb_point + " ip ok=" + ip_ok + " last Char()=" + c;
+                return false;
+            }
+        }// end checkIP()
+
+        // selView(n)
+        // type: en test
+        // obj: selectionner la vue active et l'onglet actif
+        function selView(view) {
+            //
+            //          document.getElementById("test1_id").value = view; //ok
+            //          document.getElementById("onglet2").innerHTML="ddddddddd";//ok
+            //          document.getElementById("onglet2").style="color: red"; //ok
+            //          document.getElementById("onglet2").className="active"; //ok
+            //          document.getElementById("onglet1").className=""; //ok
+            //          document.getElementById("global_dhcp_reservation_id").style.display="none"; //ok
+
+            switch (view) {
+                case 1:
+                    document.getElementById("onglet1").className = "active";
+                    document.getElementById("onglet2").className = "";
+                    document.getElementById("onglet3").className = "";
+                    document.getElementById("global_mac_convert_id").style.display = "inline";
+                    document.getElementById("global_dhcp_reservation_id").style.display = "none";
+                    document.getElementById("global_moretocome_id").style.display = "none";
+                    break;
+                case 2:
+                    document.getElementById("onglet1").className = "";
+                    document.getElementById("onglet2").className = "active";
+                    document.getElementById("onglet3").className = "";
+                    document.getElementById("global_mac_convert_id").style.display = "none";
+                    document.getElementById("global_dhcp_reservation_id").style.display = "inline";
+                    document.getElementById("global_moretocome_id").style.display = "none";
+                    break;
+                case 3:
+                    document.getElementById("onglet1").className = "";
+                    document.getElementById("onglet2").className = "";
+                    document.getElementById("onglet3").className = "active";
+                    document.getElementById("global_mac_convert_id").style.display = "none";
+                    document.getElementById("global_dhcp_reservation_id").style.display = "none";
+                    document.getElementById("global_moretocome_id").style.display = "inline";
+                    break;
+                default:
+                    break;
+            }//end switch
+        }
+
+    </script>
+
+</body>
+
+</html>
