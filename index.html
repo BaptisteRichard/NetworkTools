@@ -53,7 +53,8 @@ if(localStorage.getItem('domain') != null){
     <ul>
         <li><a id="onglet1" class="active" onClick="selView(1)">Mac@ Convertor</a></li>
         <li><a id="onglet2" onClick="selView(2)">DHCP Reservation</a></li>
-        <li><a id="onglet3" onClick="selView(3)">More to come</a></li>
+        <li><a id="onglet3" onClick="selView(3)">Subnet calculator</a></li>
+        <li><a id="onglet4" onClick="selView(4)">More to come</a></li>
     </ul>
     <hr style="border: 3px solid grey;" />
 
@@ -134,6 +135,56 @@ if(localStorage.getItem('domain') != null){
         <button type="button" id="dhcp_button_id" onclick="createDHCP()">Create DOS command</button>
         <p><textarea style="resize:none;" id="DHCP_DOS_input_id" rows="4" cols="140">Need inputs</textarea>
             <button type="button" id="dhcp_button_id" onclick="copyclipboard('DHCP_DOS_input_id');">[Ctrl]+C</button>
+        </p>
+    </div>
+
+    <div id="global_moretocome_id" style="display:none">
+        <p>More to come later ...</p>
+    </div>
+
+
+    <!-- Network subnet -->
+    <div id="global_subnet_id" style="display:none">
+        <h2>Network subnet calculator</h2>
+        <p>input IP:<input type="text" id="subnet_ip_input_id" value="">
+            <span style="color:red;" id="subnet_ip_error_id"></span>
+        </p>
+        <p> mask (bits or CIDR) <input type="text" id="subnet_mask_input_id" value="24">
+            <span style="color:red;" id="subnet_mask_error_id"></span>
+        </p>
+        <button type="button" id="subnet_button_id" onclick="calcSubnet()">Compute</button>
+
+	<hr/>
+
+        <p>
+           Network ID :
+            <input type="text" id="subnet_netID" value="">
+            <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+        </p>
+        <p>
+           First IP : 
+            <input type="text" id="subnet_firstIP" value="">
+            <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+        </p>
+        <p>
+           Last IP
+            <input type="text" id="subnet_lastIP" value="">
+            <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+        </p>
+        <p>
+           Broadcast :
+            <input type="text" id="subnet_broadcast" value="">
+            <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+        </p>
+        <p>
+           Network bits notation :
+           <input type="text" id="subnet_bits" value="">
+           <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+        </p>
+        <p>
+           Network CIDR notation :
+           <input type="text" id="subnet_CIDR" value="">
+           <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
         </p>
     </div>
 
@@ -236,6 +287,12 @@ if(localStorage.getItem('domain') != null){
 	  return mac.replace(/[^0-9a-fA-F]/g, '');
         } 
 
+	function copy(editor){
+           editor.focus();
+           editor.select();
+           document.execCommand('copy');
+	}
+
         // copyclipboard()
         // type: fonction secondaire
         // obj: input=id de la zone input, output= la value de la zone input est mise dans le presse papier:
@@ -252,7 +309,6 @@ if(localStorage.getItem('domain') != null){
 	// Grabs its parameters from the form elements and computes DHCP command lines for either creating or
 	// deleting the DHCP reservations for the given mac, address and name
         function createDHCP() {
-
 
             let mac_ok = false; // verification de la mac
             let ip_dhcp_ok = false; // verification de l'IP
@@ -353,42 +409,86 @@ if(localStorage.getItem('domain') != null){
   	  return splitNet.join('.');
 	}
 
+function firstIP(subnet){
+	var splitIP = subnet.split('.');
+	splitIP[3] ++;
+	return splitIP.join('.');
+}
+
+function getBroadcast(ip,mask){
+	var splitIP = ip.split('.');
+	var splitMask = mask.split('.');
+	var splitNet = [];
+
+	for(i =0; i<4 ; i++){
+	splitNet[i] = splitIP[i] | (255-splitMask[i]);
+	}
+	return splitNet.join('.');
+}
+
+function getLastIp(broadcast){
+	var splitIP = broadcast.split('.');
+	splitIP[3] --;
+	return splitIP.join('.');
+}
+
+	function calcSubnet(){
+	let mac_ok = false; // verification de la mac
+	let ip_dhcp_ok = false; // verification de l'IP
+	// verifier la mac:
+
+	let ip = document.getElementById("subnet_ip_input_id").value.trim(); 
+	ip_dhcp_ok = checkIP(ip);
+
+	//get subnet 
+	cidrMask = document.getElementById("subnet_mask_input_id").value;
+	netID = getSubnetFromIP(ip,cidrMask);
+	
+	bitMask = createNetmaskAddr(cidrMask);
+	broadcast = getBroadcast(netID,bitMask);	
+
+	document.getElementById("subnet_netID").value = netID;
+	document.getElementById("subnet_firstIP").value = firstIP(netID) ;
+	document.getElementById("subnet_lastIP").value = getLastIp(broadcast) ;
+	document.getElementById("subnet_broadcast").value = broadcast;
+	document.getElementById("subnet_bits").value = bitMask;
+	document.getElementById("subnet_CIDR").value = cidrMask;
+	
+
+
+         
+
+        }
 
         // selView(n)
         // type: en test
         // obj: selectionner la vue active et l'onglet actif
         function selView(view) {
-            //
-            //          document.getElementById("test1_id").value = view; //ok
-            //          document.getElementById("onglet2").innerHTML="ddddddddd";//ok
-            //          document.getElementById("onglet2").style="color: red"; //ok
-            //          document.getElementById("onglet2").className="active"; //ok
-            //          document.getElementById("onglet1").className=""; //ok
-            //          document.getElementById("global_dhcp_reservation_id").style.display="none"; //ok
+
+                    document.getElementById("onglet1").className = "";
+                    document.getElementById("onglet2").className = "";
+                    document.getElementById("onglet3").className = "";
+                    document.getElementById("onglet4").className = "";
+                    document.getElementById("global_mac_convert_id").style.display = "none";
+                    document.getElementById("global_dhcp_reservation_id").style.display = "none";
+                    document.getElementById("global_subnet_id").style.display = "none";
+                    document.getElementById("global_moretocome_id").style.display = "none";
 
             switch (view) {
                 case 1:
                     document.getElementById("onglet1").className = "active";
-                    document.getElementById("onglet2").className = "";
-                    document.getElementById("onglet3").className = "";
                     document.getElementById("global_mac_convert_id").style.display = "inline";
-                    document.getElementById("global_dhcp_reservation_id").style.display = "none";
-                    document.getElementById("global_moretocome_id").style.display = "none";
                     break;
                 case 2:
-                    document.getElementById("onglet1").className = "";
                     document.getElementById("onglet2").className = "active";
-                    document.getElementById("onglet3").className = "";
-                    document.getElementById("global_mac_convert_id").style.display = "none";
                     document.getElementById("global_dhcp_reservation_id").style.display = "inline";
-                    document.getElementById("global_moretocome_id").style.display = "none";
                     break;
                 case 3:
-                    document.getElementById("onglet1").className = "";
-                    document.getElementById("onglet2").className = "";
                     document.getElementById("onglet3").className = "active";
-                    document.getElementById("global_mac_convert_id").style.display = "none";
-                    document.getElementById("global_dhcp_reservation_id").style.display = "none";
+                    document.getElementById("global_subnet_id").style.display = "inline";
+                    break;
+                case 4:
+                    document.getElementById("onglet4").className = "active";
                     document.getElementById("global_moretocome_id").style.display = "inline";
                     break;
                 default:
