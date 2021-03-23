@@ -179,7 +179,7 @@ if(localStorage.getItem('domain') != null){
 	    splitMac = mac.split('');
             if (splitMac.length != 12) { //nb d'hexa pas bon: affiche une erreur
                 document.getElementById("checkMac_id").innerHTML =
-                    " => Number of hexadecimal in mac address = " + check_length;
+                    " => Number of hexadecimal in mac address = " + splitMac.length;
 		return ;
             }
             else { //nb d'hexa ok:
@@ -233,7 +233,7 @@ if(localStorage.getItem('domain') != null){
 	//@input supposed mac address in any format
 	//@output bare mac address stripped of any signs. Could still be invalid. 
         function bareMac(mac) {
-	  return mac.replace(/[^0-9a-f]/g, '');
+	  return mac.replace(/[^0-9a-fA-F]/g, '');
         } 
 
         // copyclipboard()
