@@ -1,506 +1,484 @@
 <!DOCTYPE html>
 <html>
-
 <head>
-    <title>Network Basic Tools v1.0.1</title>
-    <style>
-        ul {
-            list-style-type: none;
-            margin: 0;
-            padding: 0;
-            overflow: hidden;
-            background-color: black;
-        }
+	<title>Network Basic Tools v1.0.1</title>
+	<style>
+		ul {
+			list-style-type: none;
+			margin: 0;
+			padding: 0;
+			overflow: hidden;
+			background-color: black;
+		}
 
-        li {
-            float: left;
-        }
+		li {
+			float: left;
+		}
 
-        li a {
-            display: block;
-            color: white;
-            text-align: center;
-            padding: 14px 16px;
-            text-decoration: none;
-        }
+		li a {
+			display: block;
+			color: white;
+			text-align: center;
+			padding: 14px 16px;
+			text-decoration: none;
+		}
 
-        li a:hover:not(.active) {
-            background-color: darkgrey;
-        }
+		li a:hover:not(.active) {
+			background-color: darkgrey;
+		}
 
-        .active {
-            background-color: grey;
-        }
-    </style>
-    <script type="text/javascript" src="env.js" ></script>
-    <script type="text/javascript">
-
-
-if(localStorage.getItem('dhcpServers') != null){
-  dhcpServers=localStorage.getItem('dhcpServers');
-}
-if(localStorage.getItem('domain') != null){
-  domain=localStorage.getItem('domain');
-}
-
-    </script>
+		.active {
+			background-color: grey;
+		}
+	</style>
+	<script type="text/javascript" src="env.js" ></script>
+	<script type="text/javascript">
+		if(localStorage.getItem('dhcpServers') != null){
+			dhcpServers=localStorage.getItem('dhcpServers');
+		}
+		if(localStorage.getItem('domain') != null){
+			domain=localStorage.getItem('domain');
+		}
+	</script>
 </head>
 
 <body>
-    <h1 align="center" style="color:white;background-color:dimgrey;">Network IT Tools</h1>
-    <h4 align="right"> </h4>
-    <hr style="border: 3px solid grey;" />
-    <ul>
-        <li><a id="onglet1" class="active" onClick="selView(1)">Mac@ Convertor</a></li>
-        <li><a id="onglet2" onClick="selView(2)">DHCP Reservation</a></li>
-        <li><a id="onglet3" onClick="selView(3)">Subnet calculator</a></li>
-        <li><a id="onglet4" onClick="selView(4)">More to come</a></li>
-    </ul>
-    <hr style="border: 3px solid grey;" />
+	<h1 align="center" style="color:white;background-color:dimgrey;">Network IT Tools</h1>
+	<h4 align="right"> </h4>
+	<hr style="border: 3px solid grey;" />
+	<ul>
+		<li><a id="onglet1" class="active" onClick="selView(1)">Mac@ Convertor</a></li>
+		<li><a id="onglet2" onClick="selView(2)">DHCP Reservation</a></li>
+		<li><a id="onglet3" onClick="selView(3)">Subnet calculator</a></li>
+		<li><a id="onglet4" onClick="selView(4)">More to come</a></li>
+	</ul>
+	<hr style="border: 3px solid grey;" />
 
-    <!-- Mac@ convertor -->
-    <div id="global_mac_convert_id">
-        <h2>Mac@ Convertor</h2>
+	<!-- Mac@ convertor -->
+	<div id="global_mac_convert_id">
+		<h2>Mac@ Convertor</h2>
 
-        <p>input Mac Address (any format):
-            <input type="text" id="mac_input_id" value="">
-            <span style="color:red; " id="checkMac_id"></span>
-        </p>
-        <button type="button" id="convert_button_id" onclick="convertMAC()">ConvertMac@</button>
+		<p>input Mac Address (any format):
+			<input type="text" id="mac_input_id" value="">
+			<span style="color:red; " id="checkMac_id"></span>
+		</p>
+		<button type="button" id="convert_button_id" onclick="convertMAC()">ConvertMac@</button>
 
-        <p>Format Cisco:
-            <input type="text" id="mac_cisco_input_minusc_id" value="">
-            <button type="button" id="mac_cisco_button_minusc_id"
-                onclick="copyclipboard('mac_cisco_input_minusc_id');">[Ctrl]+C</button>
-        </p>
-        <p>Format Cisco:
-            <input type="text" id="mac_cisco_input_majusc_id" value="">
-            <button type="button" id="mac_cisco_button_majusc_id"
-                onclick="copyclipboard('mac_cisco_input_majusc_id');">[Ctrl]+C</button>
-        </p>
+		<p>Format Cisco:
+			<input type="text" id="mac_cisco_input_minusc_id" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
+		<p>Format Cisco:
+			<input type="text" id="mac_cisco_input_majusc_id" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
 
-        <p>Format DNA:
-            <input type="text" id="mac_dna_input_minusc_id" value="">
-            <button type="button" id="mac_dna_button_minusc_id"
-                onclick="copyclipboard('mac_dna_input_minusc_id');">[Ctrl]+C</button>
-        </p>
-        <p>Format DNA:
-            <input type="text" id="mac_dna_input_majusc_id" value="">
-            <button type="button" id="mac_dna_button_majusc_id"
-                onclick="copyclipboard('mac_dna_input_majusc_id');">[Ctrl]+C</button>
-        </p>
+		<p>Format DNA:
+			<input type="text" id="mac_dna_input_minusc_id" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
+		<p>Format DNA:
+			<input type="text" id="mac_dna_input_majusc_id" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
 
-        <p>Format Windows:
-            <input type="text" id="mac_windows_input_minusc_id" value="">
-            <button type="button" id="mac_windows_button_minusc_id"
-                onclick="copyclipboard('mac_windows_input_minusc_id');">[Ctrl]+C</button>
-        </p>
-        <p>Format Windows:
-            <input type="text" id="mac_windows_input_majusc_id" value="">
-            <button type="button" id="mac_windows_button_majusc_id"
-                onclick="copyclipboard('mac_windows_input_majusc_id');">[Ctrl]+C</button>
-        </p>
+		<p>Format Windows:
+			<input type="text" id="mac_windows_input_minusc_id" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
+		<p>Format Windows:
+			<input type="text" id="mac_windows_input_majusc_id" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
 
-        <p>Format DOS:
-            <input type="text" id="mac_dos_input_minusc_id" value="">
-            <button type="button" id="mac_dos_button_minusc_id"
-                onclick="copyclipboard('mac_dos_input_minusc_id');">[Ctrl]+C</button>
-        </p>
-        <p>Format DOS:
-            <input type="text" id="mac_dos_input_majusc_id" value="">
-            <button type="button" id="mac_dos_button_majusc_id"
-                onclick="copyclipboard('mac_dos_input_majusc_id');">[Ctrl]+C</button>
-        </p>
-    </div>
+		<p>Format DOS:
+			<input type="text" id="mac_dos_input_minusc_id" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
+		<p>Format DOS:
+			<input type="text" id="mac_dos_input_majusc_id" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
+	</div>
 
 
-    <!-- DHCP Reservation -->
-    <div id="global_dhcp_reservation_id" style="display:none">
-        <h2>DHCP Reservation</h2>
-        <p>input Mac Address (any format):<input type="text" id="mac_dhcp_input_id" value="">
-            <span style="color:red;" id="checkMac_dhcp_id"></span>
-        </p>
-        <p>input Adress IP:<input type="text" id="IP_input_id" value=""> mask <input type="text" id="mask_input_id" value="24">
-            <span style="color:red;" id="checkIP_dhcp_id"></span>
-        </p>
-        <p>input DNS name:<input type="text" id="DNS_input_id" value="">
-			  <input type="checkbox" id="dns_checkbox_id" checked>
-		   	  .
-	                  <input type="text" id="DNS_domain_id" value=""/>
-        </p>
-        <p>input DHCP servers IPs:<input type="text" id="DHCP_servers_input_id" value=""></p>
-        <p>Select Add or Delete :
-            <input type="radio" name="DHCP_Action" id="DHCP_Action_id" value="Add" checked> Add
-            <input type="radio" name="DHCP_Action" id="DHCP_Action_id" value="Del"> Del</p>
-        <button type="button" id="dhcp_button_id" onclick="createDHCP()">Create DOS command</button>
-        <p><textarea style="resize:none;" id="DHCP_DOS_input_id" rows="4" cols="140">Need inputs</textarea>
-            <button type="button" id="dhcp_button_id" onclick="copyclipboard('DHCP_DOS_input_id');">[Ctrl]+C</button>
-        </p>
-    </div>
+	<!-- DHCP Reservation -->
+	<div id="global_dhcp_reservation_id" style="display:none">
+		<h2>DHCP Reservation</h2>
+		<p>input Mac Address (any format):<input type="text" id="mac_dhcp_input_id" value="">
+			<span style="color:red;" id="checkMac_dhcp_id"></span>
+		</p>
+		<p>input Adress IP:<input type="text" id="IP_input_id" value=""> mask <input type="text" id="mask_input_id" value="24">
+			<span style="color:red;" id="checkIP_dhcp_id"></span>
+		</p>
+		<p>
+			input DNS name:<input type="text" id="DNS_input_id" value="">
+			<input type="checkbox" id="dns_checkbox_id" checked>
+			.
+			<input type="text" id="DNS_domain_id" value=""/>
+		</p>
+		<p>input DHCP servers IPs:<input type="text" id="DHCP_servers_input_id" value=""></p>
+		<p>Select Add or Delete :
+			<input type="radio" name="DHCP_Action" id="DHCP_Action_id" value="Add" checked> Add
+			<input type="radio" name="DHCP_Action" id="DHCP_Action_id" value="Del"> Del</p>
+		<button type="button" id="dhcp_button_id" onclick="createDHCP()">Create DOS command</button>
+		<p><textarea style="resize:none;" id="DHCP_DOS_input_id" rows="4" cols="140">Need inputs</textarea>
+			<button type="button" id="dhcp_button_id" onclick="copyclipboard('DHCP_DOS_input_id');">[Ctrl]+C</button>
+		</p>
+	</div>
 
-    <div id="global_moretocome_id" style="display:none">
-        <p>More to come later ...</p>
-    </div>
+	<!-- Network subnet -->
+	<div id="global_subnet_id" style="display:none">
+		<h2>Network subnet calculator</h2>
+		<p>input IP:<input type="text" id="subnet_ip_input_id" value="">
+				<span style="color:red;" id="subnet_ip_error_id"></span>
+		</p>
+		<p> mask (bits or CIDR) <input type="text" id="subnet_mask_input_id" value="24">
+				<span style="color:red;" id="subnet_mask_error_id"></span>
+		</p>
+		<button type="button" id="subnet_button_id" onclick="calcSubnet()">Compute</button>
 
+		<hr/>
 
-    <!-- Network subnet -->
-    <div id="global_subnet_id" style="display:none">
-        <h2>Network subnet calculator</h2>
-        <p>input IP:<input type="text" id="subnet_ip_input_id" value="">
-            <span style="color:red;" id="subnet_ip_error_id"></span>
-        </p>
-        <p> mask (bits or CIDR) <input type="text" id="subnet_mask_input_id" value="24">
-            <span style="color:red;" id="subnet_mask_error_id"></span>
-        </p>
-        <button type="button" id="subnet_button_id" onclick="calcSubnet()">Compute</button>
+		<p>
+			Network ID :
+			<input type="text" id="subnet_netID" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
+		<p>
+			First IP :
+			<input type="text" id="subnet_firstIP" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
+		<p>
+			Last IP
+			<input type="text" id="subnet_lastIP" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
+		<p>
+			Broadcast :
+			<input type="text" id="subnet_broadcast" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
+		<p>
+			Network bits notation :
+			<input type="text" id="subnet_bits" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
+		<p>
+			Network CIDR notation :
+			<input type="text" id="subnet_CIDR" value="">
+			<button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
+		</p>
+	</div>
 
-	<hr/>
+	<div id="global_moretocome_id" style="display:none">
+		<p>More to come later ...</p>
+	</div>
 
-        <p>
-           Network ID :
-            <input type="text" id="subnet_netID" value="">
-            <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
-        </p>
-        <p>
-           First IP : 
-            <input type="text" id="subnet_firstIP" value="">
-            <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
-        </p>
-        <p>
-           Last IP
-            <input type="text" id="subnet_lastIP" value="">
-            <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
-        </p>
-        <p>
-           Broadcast :
-            <input type="text" id="subnet_broadcast" value="">
-            <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
-        </p>
-        <p>
-           Network bits notation :
-           <input type="text" id="subnet_bits" value="">
-           <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
-        </p>
-        <p>
-           Network CIDR notation :
-           <input type="text" id="subnet_CIDR" value="">
-           <button type="button" onclick="copy(this.previousElementSibling);">[Ctrl]+C</button>
-        </p>
-    </div>
+	<!-- Fin HTML -->
 
-    <div id="global_moretocome_id" style="display:none">
-        <p>More to come later ...</p>
-    </div>
+	<script>
 
+		document.getElementById("DNS_domain_id").value = domain;
+		document.getElementById("DHCP_servers_input_id").value = dhcpServers;
 
-    
-    <!-- Fin HTML -->
-
-    <script>
-	
-        document.getElementById("DNS_domain_id").value = domain;
-        document.getElementById("DHCP_servers_input_id").value = dhcpServers;
-		
-        let check_length = 0;
-        //mac convertor:
-        let mac_input = "";
-        let mac_cisco = "abcd.1234.5678";
-        let mac_dna = "ab:cd:12:34:56:78";
-        let mac_windows = "ab-cd-12-34-56-78";
-        let mac_dos = "abcd12345678";
-        //DHCP Reservation:
-        let mac_dhcp_dos = "format dos minuscule";
-        let vlan_subnet_dhcp = "vlan Subnet";
-        let dns_name_dhcp = "name."+domain;
+		let check_length = 0;
+		//mac convertor:
+		let mac_input = "";
+		let mac_cisco = "abcd.1234.5678";
+		let mac_dna = "ab:cd:12:34:56:78";
+		let mac_windows = "ab-cd-12-34-56-78";
+		let mac_dos = "abcd12345678";
+		//DHCP Reservation:
+		let mac_dhcp_dos = "format dos minuscule";
+		let vlan_subnet_dhcp = "vlan Subnet";
+		let dns_name_dhcp = "name."+domain;
 
 
-	updateUI();
+		updateUI();
 
 
-        // convertMAC():
-        // type: fonction principale
-        // obj: affiche la mac dans les differents formats
-        function convertMAC(inputMac) {
-            mac_cisco = "";
-            mac_dna = "";
-            mac_windows = "";
-            mac_dos = "";
-            mac = bareMac(document.getElementById("mac_input_id").value.trim()); // get only the hex in mac
+		// convertMAC():
+		// type: fonction principale
+		// obj: affiche la mac dans les differents formats
+		function convertMAC(inputMac) {
+			mac_cisco = "";
+			mac_dna = "";
+			mac_windows = "";
+			mac_dos = "";
+			mac = bareMac(document.getElementById("mac_input_id").value.trim()); // get only the hex in mac
 
-	    splitMac = mac.split('');
-            if (splitMac.length != 12) { //nb d'hexa pas bon: affiche une erreur
-                document.getElementById("checkMac_id").innerHTML =
-                    " => Number of hexadecimal in mac address = " + splitMac.length;
-		return ;
-            }
-            else { //nb d'hexa ok:
-                document.getElementById("checkMac_id").innerHTML = "";
-            }
+			splitMac = mac.split('');
+			if (splitMac.length != 12) { //nb d'hexa pas bon: affiche une erreur
+				document.getElementById("checkMac_id").innerHTML =
+					" => Number of hexadecimal in mac address = " + splitMac.length;
+				return ;
+			}
+			else { //nb d'hexa ok:
+				document.getElementById("checkMac_id").innerHTML = "";
+			}
 
-            // mise en page des differents formats:
-            let c = ""; 
-            let pos = 0; // useful to know when to add signs
-            for (let i = 0; i < 12 ; i++) {
-		c = splitMac[i];
-                    if (pos % 4 == 0 && pos != 0) { //add a dot every 4 characters
-		        mac_cisco = mac_cisco + '.'; 
-		    }
-                    if (pos % 2 == 0 && pos != 0) { //add a - or : every 2 characters
-                        mac_dna = mac_dna + ':';
-                        mac_windows = mac_windows + '-';
-                    }
+			// mise en page des differents formats:
+			let c = "";
+			let pos = 0; // useful to know when to add signs
+			for (let i = 0; i < 12 ; i++) {
+				c = splitMac[i];
+					if (pos % 4 == 0 && pos != 0) { //add a dot every 4 characters
+						mac_cisco = mac_cisco + '.';
+					}
+					if (pos % 2 == 0 && pos != 0) { //add a - or : every 2 characters
+						mac_dna = mac_dna + ':';
+						mac_windows = mac_windows + '-';
+					}
 
-                    mac_cisco = mac_cisco + c;
-                    mac_dna = mac_dna + c;
-                    mac_windows = mac_windows + c;
-                    mac_dos = mac_dos + c;
-                    pos++;
+					mac_cisco = mac_cisco + c;
+					mac_dna = mac_dna + c;
+					mac_windows = mac_windows + c;
+					mac_dos = mac_dos + c;
+					pos++;
 
-            } //end for
+			} //end for
 
-            // Displaying results
-	    updateUI();
+			// Displaying results
+			updateUI();
 
-        } //end convertMAC()
+		} //end convertMAC()
 
-	//@input none
-	//@output non
-	// Dsiplays all variables in the appropriate fields
-	function updateUI(){
+		//@input none
+		//@output non
+		// Dsiplays all variables in the appropriate fields
+		function updateUI(){
 
-            document.getElementById("mac_input_id").value = mac_input;
-            document.getElementById("mac_dhcp_input_id").value = mac_cisco.toLowerCase();
-            document.getElementById("mac_cisco_input_minusc_id").value = mac_cisco.toLowerCase();
-            document.getElementById("mac_cisco_input_majusc_id").value = mac_cisco.toUpperCase();
-            document.getElementById("mac_dna_input_minusc_id").value = mac_dna.toLowerCase();
-            document.getElementById("mac_dna_input_majusc_id").value = mac_dna.toUpperCase();
-            document.getElementById("mac_windows_input_minusc_id").value = mac_windows.toLowerCase();
-            document.getElementById("mac_windows_input_majusc_id").value = mac_windows.toUpperCase();
-            document.getElementById("mac_dos_input_minusc_id").value = mac_dos.toLowerCase();
-            document.getElementById("mac_dos_input_majusc_id").value = mac_dos.toUpperCase();
+			document.getElementById("mac_input_id").value = mac_input;
+			document.getElementById("mac_dhcp_input_id").value = mac_cisco.toLowerCase();
+			document.getElementById("mac_cisco_input_minusc_id").value = mac_cisco.toLowerCase();
+			document.getElementById("mac_cisco_input_majusc_id").value = mac_cisco.toUpperCase();
+			document.getElementById("mac_dna_input_minusc_id").value = mac_dna.toLowerCase();
+			document.getElementById("mac_dna_input_majusc_id").value = mac_dna.toUpperCase();
+			document.getElementById("mac_windows_input_minusc_id").value = mac_windows.toLowerCase();
+			document.getElementById("mac_windows_input_majusc_id").value = mac_windows.toUpperCase();
+			document.getElementById("mac_dos_input_minusc_id").value = mac_dos.toLowerCase();
+			document.getElementById("mac_dos_input_majusc_id").value = mac_dos.toUpperCase();
 
-	}
-
-	//@input supposed mac address in any format
-	//@output bare mac address stripped of any signs. Could still be invalid. 
-        function bareMac(mac) {
-	  return mac.replace(/[^0-9a-fA-F]/g, '');
-        } 
-
-	function copy(editor){
-           editor.focus();
-           editor.select();
-           document.execCommand('copy');
-	}
-
-        // copyclipboard()
-        // type: fonction secondaire
-        // obj: input=id de la zone input, output= la value de la zone input est mise dans le presse papier:
-        function copyclipboard(source) {
-            var editor = document.getElementById(source);
-            editor.focus();
-            editor.select();
-            document.execCommand('copy');
-        } // end copyclipboard()
-
-        // createDHCP()
-	//@input : none
-	//@output : non
-	// Grabs its parameters from the form elements and computes DHCP command lines for either creating or
-	// deleting the DHCP reservations for the given mac, address and name
-        function createDHCP() {
-
-            let mac_ok = false; // verification de la mac
-            let ip_dhcp_ok = false; // verification de l'IP
-            // verifier la mac:
-
-	    mac = bareMac(document.getElementById("mac_dhcp_input_id").value.trim()); //calcul le nb d'hexadecimal dans la mac
-
-            splitMac = mac.split('');
-            if (splitMac.length != 12) { //nb d'hexa pas bon: affiche une erreur
-                document.getElementById("checkMac_dhcp_id").innerHTML =
-                    " => Number of hexadecimal in mac address = " + check_length;
-                return ;
-            }
-            else { //nb d'hexa ok:
-                document.getElementById("checkMac_dhcp_id").innerHTML = "";
-            }
-
-            // check IP format
-	    ip = document.getElementById("IP_input_id").value;
-            ip_dhcp_ok = checkIP(ip);
-
-	    //get subnet for DHCP scope
-	    mask = document.getElementById("mask_input_id").value;
-	    dhcpSubnet = getSubnetFromIP(ip,mask)
-
-            // dns name:
-            dns_name_dhcp = document.getElementById("DNS_input_id").value.trim();
-            dns_domain_dhcp = document.getElementById("DNS_domain_id").value.trim();
-            if (document.getElementById("dns_checkbox_id").checked) { dns_name_dhcp += "." + dns_domain_dhcp; }
-
-            // creer la ligne de cmd:
-            var dhcpCommandValue= "";
-            var servers=document.getElementById("DHCP_servers_input_id").value.split(",");
-
-  	    localStorage.setItem('domain',dns_domain_dhcp);
-	    localStorage.setItem('dhcpServers',servers);
-
-            if (ip_dhcp_ok ){
-
-                if(document.getElementsByName('DHCP_Action')[0].checked) { //creer les 2 lignes Add
-                    for (i =0; i<servers.length;i++){
-                      dhcpCommandValue += "netsh Dhcp Server " + servers[i] + " scope " + dhcpSubnet
-                      + " add reservedip " + ip + " " + mac + " " + dns_name_dhcp
-                      + ' "" DHCP ' + "\n"
-                    }
-                }
-                else if (document.getElementsByName('DHCP_Action')[1].checked) { // creer les 2 lignes Del
-                    for (i =0; i<servers.length;i++){
-                      dhcpCommandValue += "netsh Dhcp Server " + servers[i] + " scope " + dhcpSubnet
-                      + " del reservedip " + ip + " " + mac + " \n";
-                    }
 		}
-            }
-            else { // no go
-                document.getElementById("DHCP_DOS_input_id").value = "need correct input";
-            }
-            document.getElementById("DHCP_DOS_input_id").value=dhcpCommandValue;
+
+		//@input supposed mac address in any format
+		//@output bare mac address stripped of any signs. Could still be invalid.
+		function bareMac(mac) {
+			return mac.replace(/[^0-9a-fA-F]/g, '');
+		}
+
+		function copy(editor){
+			editor.focus();
+			editor.select();
+			document.execCommand('copy');
+		}
+
+		// copyclipboard()
+		// type: fonction secondaire
+		// obj: input=id de la zone input, output= la value de la zone input est mise dans le presse papier:
+		function copyclipboard(source) {
+			var editor = document.getElementById(source);
+			editor.focus();
+			editor.select();
+			document.execCommand('copy');
+		} // end copyclipboard()
+
+		// createDHCP()
+		//@input : none
+		//@output : non
+		// Grabs its parameters from the form elements and computes DHCP command lines for either creating or
+		// deleting the DHCP reservations for the given mac, address and name
+		function createDHCP() {
+
+			let mac_ok = false; // verification de la mac
+			let ip_dhcp_ok = false; // verification de l'IP
+			// verifier la mac:
+
+			mac = bareMac(document.getElementById("mac_dhcp_input_id").value.trim()); //calcul le nb d'hexadecimal dans la mac
+
+			splitMac = mac.split('');
+			if (splitMac.length != 12) { //nb d'hexa pas bon: affiche une erreur
+				document.getElementById("checkMac_dhcp_id").innerHTML =
+					" => Number of hexadecimal in mac address = " + check_length;
+				return ;
+			}
+			else { //nb d'hexa ok:
+				document.getElementById("checkMac_dhcp_id").innerHTML = "";
+			}
+
+			// check IP format
+			ip = document.getElementById("IP_input_id").value;
+			ip_dhcp_ok = checkIP(ip);
+
+			//get subnet for DHCP scope
+			mask = document.getElementById("mask_input_id").value;
+			dhcpSubnet = getSubnetFromIP(ip,mask)
+
+			// dns name:
+			dns_name_dhcp = document.getElementById("DNS_input_id").value.trim();
+			dns_domain_dhcp = document.getElementById("DNS_domain_id").value.trim();
+			if (document.getElementById("dns_checkbox_id").checked) { dns_name_dhcp += "." + dns_domain_dhcp; }
+
+			// creer la ligne de cmd:
+			var dhcpCommandValue= "";
+			var servers=document.getElementById("DHCP_servers_input_id").value.split(",");
+
+			localStorage.setItem('domain',dns_domain_dhcp);
+			localStorage.setItem('dhcpServers',servers);
+
+			if (ip_dhcp_ok ){
+
+				if(document.getElementsByName('DHCP_Action')[0].checked) { //creer les 2 lignes Add
+					for (i =0; i<servers.length;i++){
+						dhcpCommandValue += "netsh Dhcp Server " + servers[i] + " scope " + dhcpSubnet
+						+ " add reservedip " + ip + " " + mac + " " + dns_name_dhcp
+						+ ' "" DHCP ' + "\n"
+					}
+				}
+				else if (document.getElementsByName('DHCP_Action')[1].checked) { // creer les 2 lignes Del
+					for (i =0; i<servers.length;i++){
+						dhcpCommandValue += "netsh Dhcp Server " + servers[i] + " scope " + dhcpSubnet
+						+ " del reservedip " + ip + " " + mac + " \n";
+					}
+				}
+			}
+			else { // no go
+				document.getElementById("DHCP_DOS_input_id").value = "need correct input";
+			}
+			document.getElementById("DHCP_DOS_input_id").value=dhcpCommandValue;
 
 
-        } // end createDHCP()
+		} // end createDHCP()
 
 
 
-	//@input dotted representation of an IP
-	//@output boolean whether this is a valid IPv4
-	function checkIP(ip){
-	  var splitIP = ip.split('.');
-	  if(splitIP.length !=4){ return false;}
-	  for(i=0; i<4; i++) {
-	    if(isNaN(splitIP[i]) || parseInt(splitIP[i])<0 || parseInt(splitIP[i]) > 254) { return false ;}
-	  }
-	  return true;
-	}
+		//@input dotted representation of an IP
+		//@output boolean whether this is a valid IPv4
+		function checkIP(ip){
+			var splitIP = ip.split('.');
+			if(splitIP.length !=4){ return false;}
+			for(i=0; i<4; i++) {
+				if(isNaN(splitIP[i]) || parseInt(splitIP[i])<0 || parseInt(splitIP[i]) > 254) { return false ;}
+			}
+			return true;
+		}
 
-	//@input CIDR mask size
-	//@output dotted representation of the mask
-	function createNetmaskAddr(bitCount) {
-	  var mask = [], i, n;
-  	  for(i=0; i<4; i++) {
-    	    n = Math.min(bitCount, 8);
-    	    mask.push(256 - Math.pow(2, 8-n));
-    	    bitCount -= n;
-  	  }
-  	  return mask.join('.');
-	}
+		//@input CIDR mask size
+		//@output dotted representation of the mask
+		function createNetmaskAddr(bitCount) {
+			var mask = [], i, n;
+			for(i=0; i<4; i++) {
+				n = Math.min(bitCount, 8);
+				mask.push(256 - Math.pow(2, 8-n));
+				bitCount -= n;
+			}
+			return mask.join('.');
+		}
 
-	// @input : valid IP
-	// @input : CIDR mask
-	function getSubnetFromIP(ip,mask){
+		// @input : valid IP
+		// @input : CIDR mask
+		function getSubnetFromIP(ip,mask){
 
-	  var splitIP = ip.split('.');
-	  var splitMask = createNetmaskAddr(mask).split('.');
-	  var splitNet = [];
-	
-  	  for(i =0; i<4 ; i++){
-	    splitNet[i] = splitIP[i] & splitMask[i];
-	  }
-  	  return splitNet.join('.');
-	}
+			var splitIP = ip.split('.');
+			var splitMask = createNetmaskAddr(mask).split('.');
+			var splitNet = [];
 
-function firstIP(subnet){
-	var splitIP = subnet.split('.');
-	splitIP[3] ++;
-	return splitIP.join('.');
-}
+			for(i =0; i<4 ; i++){
+				splitNet[i] = splitIP[i] & splitMask[i];
+			}
+			return splitNet.join('.');
+		}
 
-function getBroadcast(ip,mask){
-	var splitIP = ip.split('.');
-	var splitMask = mask.split('.');
-	var splitNet = [];
+		function firstIP(subnet){
+			var splitIP = subnet.split('.');
+			splitIP[3] ++;
+			return splitIP.join('.');
+		}
 
-	for(i =0; i<4 ; i++){
-	splitNet[i] = splitIP[i] | (255-splitMask[i]);
-	}
-	return splitNet.join('.');
-}
+		function getBroadcast(ip,mask){
+			var splitIP = ip.split('.');
+			var splitMask = mask.split('.');
+			var splitNet = [];
 
-function getLastIp(broadcast){
-	var splitIP = broadcast.split('.');
-	splitIP[3] --;
-	return splitIP.join('.');
-}
+			for(i =0; i<4 ; i++){
+				splitNet[i] = splitIP[i] | (255-splitMask[i]);
+			}
+			return splitNet.join('.');
+		}
 
-	function calcSubnet(){
-	let mac_ok = false; // verification de la mac
-	let ip_dhcp_ok = false; // verification de l'IP
-	// verifier la mac:
+		function getLastIp(broadcast){
+			var splitIP = broadcast.split('.');
+			splitIP[3] --;
+			return splitIP.join('.');
+		}
 
-	let ip = document.getElementById("subnet_ip_input_id").value.trim(); 
-	ip_dhcp_ok = checkIP(ip);
+		function calcSubnet(){
+			let mac_ok = false; // verification de la mac
+			let ip_dhcp_ok = false; // verification de l'IP
+			// verifier la mac:
 
-	//get subnet 
-	cidrMask = document.getElementById("subnet_mask_input_id").value;
-	netID = getSubnetFromIP(ip,cidrMask);
-	
-	bitMask = createNetmaskAddr(cidrMask);
-	broadcast = getBroadcast(netID,bitMask);	
+			let ip = document.getElementById("subnet_ip_input_id").value.trim();
+			ip_dhcp_ok = checkIP(ip);
 
-	document.getElementById("subnet_netID").value = netID;
-	document.getElementById("subnet_firstIP").value = firstIP(netID) ;
-	document.getElementById("subnet_lastIP").value = getLastIp(broadcast) ;
-	document.getElementById("subnet_broadcast").value = broadcast;
-	document.getElementById("subnet_bits").value = bitMask;
-	document.getElementById("subnet_CIDR").value = cidrMask;
-	
+			//get subnet
+			cidrMask = document.getElementById("subnet_mask_input_id").value;
+			netID = getSubnetFromIP(ip,cidrMask);
 
+			bitMask = createNetmaskAddr(cidrMask);
+			broadcast = getBroadcast(netID,bitMask);
 
-         
+			document.getElementById("subnet_netID").value = netID;
+			document.getElementById("subnet_firstIP").value = firstIP(netID) ;
+			document.getElementById("subnet_lastIP").value = getLastIp(broadcast) ;
+			document.getElementById("subnet_broadcast").value = broadcast;
+			document.getElementById("subnet_bits").value = bitMask;
+			document.getElementById("subnet_CIDR").value = cidrMask;
+		}
 
-        }
+		// selView(n)
+		// type: en test
+		// obj: selectionner la vue active et l'onglet actif
+		function selView(view) {
 
-        // selView(n)
-        // type: en test
-        // obj: selectionner la vue active et l'onglet actif
-        function selView(view) {
+			document.getElementById("onglet1").className = "";
+			document.getElementById("onglet2").className = "";
+			document.getElementById("onglet3").className = "";
+			document.getElementById("onglet4").className = "";
+			document.getElementById("global_mac_convert_id").style.display = "none";
+			document.getElementById("global_dhcp_reservation_id").style.display = "none";
+			document.getElementById("global_subnet_id").style.display = "none";
+			document.getElementById("global_moretocome_id").style.display = "none";
 
-                    document.getElementById("onglet1").className = "";
-                    document.getElementById("onglet2").className = "";
-                    document.getElementById("onglet3").className = "";
-                    document.getElementById("onglet4").className = "";
-                    document.getElementById("global_mac_convert_id").style.display = "none";
-                    document.getElementById("global_dhcp_reservation_id").style.display = "none";
-                    document.getElementById("global_subnet_id").style.display = "none";
-                    document.getElementById("global_moretocome_id").style.display = "none";
+			switch (view) {
+				case 1:
+					document.getElementById("onglet1").className = "active";
+					document.getElementById("global_mac_convert_id").style.display = "inline";
+					break;
+				case 2:
+					document.getElementById("onglet2").className = "active";
+					document.getElementById("global_dhcp_reservation_id").style.display = "inline";
+					break;
+				case 3:
+					document.getElementById("onglet3").className = "active";
+					document.getElementById("global_subnet_id").style.display = "inline";
+					break;
+				case 4:
+					document.getElementById("onglet4").className = "active";
+					document.getElementById("global_moretocome_id").style.display = "inline";
+					break;
+				default:
+					break;
+			}//end switch
 
-            switch (view) {
-                case 1:
-                    document.getElementById("onglet1").className = "active";
-                    document.getElementById("global_mac_convert_id").style.display = "inline";
-                    break;
-                case 2:
-                    document.getElementById("onglet2").className = "active";
-                    document.getElementById("global_dhcp_reservation_id").style.display = "inline";
-                    break;
-                case 3:
-                    document.getElementById("onglet3").className = "active";
-                    document.getElementById("global_subnet_id").style.display = "inline";
-                    break;
-                case 4:
-                    document.getElementById("onglet4").className = "active";
-                    document.getElementById("global_moretocome_id").style.display = "inline";
-                    break;
-                default:
-                    break;
-            }//end switch
+			updateUI();
 
-     	    updateUI();
+		}
 
-        }
-
-    </script>
+	</script>
 
 </body>
 
 </html>
+
