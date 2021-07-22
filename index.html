@@ -370,7 +370,7 @@
 						+ " " + dns_name_dhcp + " /CreatePTR A " + ip + "\n";
 						if (dns_alias != ""){
 							dnsCommandValue += "dnscmd.exe " + servers[i] + " /RecordAdd " + dns_domain_dhcp
-							+ " " + dns_alias + " CNAME " + dns_name_dhcp + "\n";
+							+ " " + dns_alias + " CNAME " + dns_name_dhcp + "." +dns_domain_dhcp+ ".\n";
 						}
 					}
 				}
@@ -380,7 +380,7 @@
 						+ " del reservedip " + ip + " " + mac + " \n";
 						if (dns_alias != ""){
 							dnsCommandValue += "dnscmd.exe " + servers[i] + " /RecordDelete " + dns_domain_dhcp
-							+ " " + dns_alias + " CNAME " + dns_name_dhcp + "\n";
+							+ " " + dns_alias + " CNAME " + dns_name_dhcp + "." +dns_domain_dhcp+ ".\n";
 						}
 						dnsCommandValue += "dnscmd.exe " + servers[i] + " /RecordDelete " + dns_domain_dhcp
 						+ " " + dns_name_dhcp + " A " + ip + "\n";
